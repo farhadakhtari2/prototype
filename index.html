@@ -1,0 +1,560 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#EDF4FB;--bg2:#E2EEF8;--surface:#FFFFFF;--surface2:#F0F7FF;
+  --navy:#0A1628;--navy2:#0D2040;
+  --blue:#1560BD;--blue2:#1A75E0;--blue3:#0D4FA0;
+  --cyan:#00B4D8;--cyan2:#0096C7;
+  --accent:#1560BD;--accent-light:#DBE9FA;--accent-mid:#8BBDE8;
+  --green:#0F8A4A;--green-light:#D6F5E8;
+  --amber:#C47900;--amber-light:#FDF0CC;
+  --red:#C0392B;--red-light:#FDECEA;
+  --purple:#5B2FBE;--purple-light:#EDE8FC;
+  --teal:#007B7F;--teal-light:#CCF0F2;
+  --text:#0A1628;--text2:#2C4A6E;--text3:#6B88A8;
+  --border:#C5D8ED;--border2:#A8C4DF;
+  --r:6px;--R:10px;--RR:13px;
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
+.shell{display:flex;min-height:660px}
+.sidebar{width:210px;background:var(--navy);flex-shrink:0;display:flex;flex-direction:column;min-height:660px;border-right:1px solid rgba(255,255,255,0.05)}
+.logo{padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.logo-row{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.logo-cube{width:26px;height:26px;background:var(--blue2);border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,180,216,0.4)}
+.logo-cube svg{width:14px;height:14px;stroke:var(--cyan);fill:none;stroke-width:1.8}
+.logo-text{font-size:13px;font-weight:600;color:#fff;letter-spacing:-0.3px}
+.logo-sub{font-size:9px;color:rgba(0,180,216,0.55);font-family:var(--mono);letter-spacing:1px;margin-top:1px}
+.nav{padding:6px 0;flex:1;overflow-y:auto}
+.nlbl{font-size:9px;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;padding:9px 12px 3px;font-family:var(--mono)}
+.ni{display:flex;align-items:center;gap:8px;padding:6px 10px;cursor:pointer;color:rgba(255,255,255,0.45);font-size:11.5px;font-weight:400;transition:all 0.12s;margin:1px 6px;border-radius:var(--r);border:1px solid transparent}
+.ni:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.8)}
+.ni.on{background:rgba(21,96,189,0.35);color:#90CAFF;border-color:rgba(21,96,189,0.5)}
+.ni svg{width:13px;height:13px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.7}
+.ni-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-left:auto}
+.user-area{padding:10px 12px;border-top:1px solid rgba(255,255,255,0.07)}
+.av{width:24px;height:24px;border-radius:50%;background:var(--blue2);border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:var(--cyan);flex-shrink:0}
+.un{font-size:11px;font-weight:500;color:rgba(255,255,255,0.8)}
+.ur{font-size:9px;color:rgba(255,255,255,0.3);font-family:var(--mono)}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 18px;height:46px;display:flex;align-items:center;gap:10px}
+.bc-home{font-size:11px;color:var(--text3)}.bc-sep{color:var(--border2);font-size:11px}.bc-cur{font-size:12px;font-weight:500;color:var(--text);flex:1}
+.search-bar{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:5px 10px;font-size:12px;color:var(--text3);width:200px}
+.search-bar svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.pill{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500;font-family:var(--mono);white-space:nowrap}
+.p-blue{background:#DBE9FA;color:#0D4FA0}.p-green{background:var(--green-light);color:var(--green)}
+.p-amber{background:var(--amber-light);color:var(--amber)}.p-red{background:var(--red-light);color:var(--red)}
+.p-purple{background:var(--purple-light);color:var(--purple)}.p-teal{background:var(--teal-light);color:var(--teal)}
+.p-gray{background:var(--bg2);border:1px solid var(--border);color:var(--text3)}.p-cyan{background:#CCF5FB;color:var(--cyan2)}
+.content{padding:16px 18px;flex:1;overflow-y:auto;background:var(--bg)}
+.screen{display:none}.screen.on{display:block}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--RR);padding:13px 15px}
+.card-sm{background:var(--surface2);border:1px solid var(--border);border-radius:var(--R);padding:10px 12px}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--R);padding:11px 13px}
+.m-label{font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono);margin-bottom:5px}
+.m-val{font-size:22px;font-weight:600;color:var(--text);letter-spacing:-0.8px;line-height:1}
+.m-sub{font-size:10px;color:var(--text3);margin-top:3px}
+.bar-wrap{background:var(--bg2);border-radius:3px;height:4px;margin-top:7px;overflow:hidden}
+.bar{height:100%;border-radius:3px;background:var(--blue2)}.bar.g{background:var(--green)}.bar.a{background:var(--amber)}
+.ct{font-size:12px;font-weight:600;color:var(--text);letter-spacing:-0.2px}
+.row{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--r);font-size:11px;font-weight:500;cursor:pointer;border:1px solid transparent;font-family:var(--sans);transition:all 0.12s;text-decoration:none}
+.btn-primary{background:var(--blue2);color:white;border-color:var(--blue2)}.btn-primary:hover{background:var(--blue3)}
+.btn-ghost{background:transparent;color:var(--text2);border-color:var(--border)}.btn-ghost:hover{background:var(--bg2)}
+.btn-cyan{background:var(--navy);color:var(--cyan);border:1px solid rgba(0,180,216,0.3)}.btn-cyan:hover{border-color:var(--cyan)}
+.btn-adsk{background:#0696D7;color:white;border-color:#0696D7}
+.btn-navis{background:#007A3D;color:white;border-color:#007A3D}
+.btn-upload{background:var(--blue2);color:white;border-color:var(--blue2);padding:7px 14px;font-size:12px;font-weight:600}.btn-upload:hover{background:var(--blue3)}
+.hero{background:var(--navy2);border-radius:var(--RR);padding:18px 20px;margin-bottom:12px;border:1px solid rgba(0,180,216,0.15);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20px;right:-20px;width:160px;height:160px;border-radius:50%;background:rgba(21,96,189,0.12);pointer-events:none}
+.hero h2{font-size:15px;font-weight:600;color:white;margin-bottom:2px;letter-spacing:-0.4px}
+.hero p{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px}
+.hbtn{padding:6px 12px;border-radius:var(--r);font-size:11px;font-weight:500;cursor:pointer;border:none;font-family:var(--sans)}
+.hbtn-solid{background:var(--blue2);color:white}.hbtn-ghost{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.1)}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:7px 9px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg)}
+tbody td{padding:8px 9px;border-bottom:1px solid var(--border);font-size:11.5px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--accent-light)}
+.mono{font-family:var(--mono);font-size:10.5px;color:var(--text)}
+.code-block{background:var(--navy);border-radius:var(--R);padding:11px 13px;font-family:var(--mono);font-size:10.5px;color:#7BAFD4;line-height:2;border:1px solid rgba(0,180,216,0.15)}
+.hl{color:#60C8F0}.hv{color:#4DD9A0}.hs{color:#2C4A6E}
+.tl-item{display:flex;gap:9px;margin-bottom:9px}
+.tl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.td-g{background:var(--green)}.td-a{background:var(--amber)}.td-n{background:var(--border2)}
+.disc-row{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.disc-name{font-size:11px;font-family:var(--mono);color:var(--text2);width:85px;flex-shrink:0}
+.disc-track{flex:1;background:var(--bg2);border-radius:3px;height:4px;overflow:hidden}
+.disc-fill{height:100%;border-radius:3px}
+.chk{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.12s}
+.chk.done{background:var(--green);border-color:var(--green)}
+.chk-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--bg2)}
+.ftype{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:5px;flex-shrink:0;font-family:var(--mono);font-size:9px;font-weight:600}
+.ft-dr{background:#DBE9FA;color:#0D4FA0}.ft-mo{background:#D6F5E8;color:#0F8A4A}
+.ft-ca{background:#FDF0CC;color:#C47900}.ft-sp{background:var(--purple-light);color:var(--purple)}
+.ft-rs{background:#FDECEA;color:var(--red)}.ft-sc{background:var(--teal-light);color:var(--teal)}
+.info-strip{display:flex;align-items:flex-start;gap:9px;padding:9px 12px;background:var(--accent-light);border-radius:var(--r);margin-bottom:12px;border:1px solid var(--border)}
+.info-strip svg{width:13px;height:13px;stroke:var(--blue2);fill:none;stroke-width:2;flex-shrink:0;margin-top:1px}
+.tab-bar{display:flex;border-bottom:2px solid var(--border);margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:7px 12px;font-size:11px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--text3);transition:all 0.12s}
+.tab.on{border-bottom-color:var(--blue2);color:var(--text);font-weight:600}
+.ph{font-size:16px;font-weight:600;color:var(--text);letter-spacing:-0.4px;margin-bottom:2px}
+.psub{font-size:11px;color:var(--text2);margin-bottom:14px}
+.phase-card{border-radius:var(--RR);border:1px solid var(--border);background:var(--surface);padding:13px 15px;margin-bottom:10px}
+.phase-num{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.mod-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--R);padding:13px;cursor:pointer;transition:all 0.15s}
+.mod-card:hover{border-color:var(--accent-mid)}.mod-card.amod{border-color:var(--blue2);background:var(--accent-light)}
+.mod-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+.mi-b{background:var(--accent-light)}.mi-g{background:var(--green-light)}.mi-a{background:var(--amber-light)}.mi-p{background:var(--purple-light)}.mi-t{background:var(--teal-light)}
+.mod-icon svg{width:14px;height:14px;stroke-width:1.7;fill:none}
+.mi-b svg{stroke:var(--blue2)}.mi-g svg{stroke:var(--green)}.mi-a svg{stroke:var(--amber)}.mi-p svg{stroke:var(--purple)}.mi-t svg{stroke:var(--teal)}
+.learn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--R);padding:14px;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;gap:8px}
+.learn-card:hover{border-color:var(--blue2)}
+.lc-num{width:22px;height:22px;border-radius:50%;background:var(--accent-light);color:var(--blue2);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.iso-part{background:var(--surface);border:1px solid var(--border);border-radius:var(--RR);overflow:hidden;margin-bottom:10px}
+.iso-header{background:var(--navy2);padding:11px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(0,180,216,0.15)}
+.iso-badge{background:rgba(0,180,216,0.15);border:1px solid rgba(0,180,216,0.3);border-radius:5px;padding:2px 7px;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--cyan);flex-shrink:0}
+.iso-title{font-size:12px;font-weight:600;color:white;flex:1}
+.iso-body{padding:12px 14px}
+.iso-row{display:flex;gap:7px;margin-bottom:7px;align-items:flex-start}
+.iso-dot{width:4px;height:4px;border-radius:50%;background:var(--blue2);flex-shrink:0;margin-top:6px}
+.cde-panel{background:var(--navy2);border-radius:var(--RR);border:1px solid rgba(0,180,216,0.2);padding:14px;margin-bottom:12px}
+.cde-stat{background:rgba(255,255,255,0.06);border-radius:var(--r);padding:9px 11px;border:1px solid rgba(255,255,255,0.08)}
+.faq-item{border:1px solid var(--border);border-radius:var(--R);background:var(--surface);margin-bottom:7px;overflow:hidden}
+.faq-q{padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;font-weight:500;color:var(--text);transition:background 0.12s}
+.faq-q:hover{background:var(--bg2)}
+.faq-q.open{background:var(--accent-light);color:var(--blue2)}
+.faq-a{display:none;padding:10px 14px 12px;font-size:12px;color:var(--text2);line-height:1.65;border-top:1px solid var(--border)}
+.faq-a.open{display:block}
+.faq-arrow{width:12px;height:12px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;transition:transform 0.2s}
+.faq-arrow.open{transform:rotate(180deg)}
+.wf-step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.wf-num{width:24px;height:24px;border-radius:50%;background:var(--blue2);color:white;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.collab-post{background:var(--surface);border:1px solid var(--border);border-radius:var(--R);padding:12px 14px;margin-bottom:8px}
+.col-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.quick-link{display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--R);cursor:pointer;transition:all 0.12s;text-decoration:none}
+.quick-link:hover{border-color:var(--accent-mid);background:var(--accent-light)}
+.quick-link svg{width:14px;height:14px;stroke:var(--blue2);fill:none;stroke-width:1.7;flex-shrink:0}
+.contact-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--R);padding:11px 13px;display:flex;align-items:center;gap:10px}
+.badge-strip{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.skill-badge{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:500;background:var(--accent-light);color:var(--blue2);border:1px solid var(--accent-mid)}
+.skill-badge.earned{background:var(--green-light);color:var(--green);border-color:var(--green)}
+.modal-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(10,22,40,0.55);display:flex;align-items:center;justify-content:center;z-index:100;min-height:400px}
+.modal-box{background:var(--surface);border-radius:var(--RR);border:1px solid var(--border);width:440px;padding:20px}
+.modal-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;letter-spacing:-0.3px}
+.modal-sub{font-size:11px;color:var(--text2);margin-bottom:16px}
+.drop-zone{border:2px dashed var(--accent-mid);border-radius:var(--R);padding:28px 20px;text-align:center;background:var(--accent-light);cursor:pointer;transition:all 0.15s;margin-bottom:14px}
+.drop-zone:hover{border-color:var(--blue2);background:#d0e4f8}
+.drop-icon{width:36px;height:36px;border-radius:50%;background:var(--blue2);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.drop-icon svg{width:18px;height:18px;stroke:white;fill:none;stroke-width:2}
+.field-row{display:flex;gap:8px;margin-bottom:10px}
+.field-label{font-size:11px;font-weight:500;color:var(--text2);margin-bottom:4px}
+.field-input{width:100%;border:1px solid var(--border);border-radius:var(--r);padding:6px 9px;font-size:12px;font-family:var(--sans);color:var(--text);background:var(--bg)}
+.field-select{width:100%;border:1px solid var(--border);border-radius:var(--r);padding:6px 9px;font-size:12px;font-family:var(--sans);color:var(--text);background:var(--surface)}
+.preview-row{display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border);margin-bottom:14px}
+.preview-filename{font-family:var(--mono);font-size:11px;color:var(--blue2);flex:1}
+</style>
+
+<div class="shell">
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-row">
+        <div class="logo-cube"><svg viewBox="0 0 14 14"><path d="M7 1L1 4.5v5L7 13l6-3.5v-5L7 1z"/><path d="M7 1v12M1 4.5l6 3.5 6-3.5"/></svg></div>
+        <div><div class="logo-text">IDS BIM Hub</div><div class="logo-sub">ISO 19650 · v2.0</div></div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="nlbl">Overview</div>
+      <!-- ✅ Dashboard is .on by default -->
+      <div class="ni on" id="ni-dash" onclick="nav('dash',this)"><svg viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Dashboard<div class="ni-dot"></div></div>
+      <div class="nlbl">Learn</div>
+      <div class="ni" onclick="nav('bimlearn',this)"><svg viewBox="0 0 14 14"><path d="M7 1L1 4.5l6 3 6-3-6-3.5z"/><path d="M1 9.5l6 3 6-3M1 7l6 3 6-3"/></svg>BIM Learning Centre</div>
+      <div class="ni" onclick="nav('training',this)"><svg viewBox="0 0 14 14"><circle cx="7" cy="5" r="3"/><path d="M2 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/></svg>Training Portal</div>
+      <div class="nlbl">Standards</div>
+      <div class="ni" onclick="nav('standards',this)"><svg viewBox="0 0 14 14"><rect x="2" y="1" width="10" height="12" rx="1"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="7.5" x2="9" y2="7.5"/><line x1="5" y1="10" x2="7.5" y2="10"/></svg>BIM Standards</div>
+      <div class="ni" onclick="nav('files',this)"><svg viewBox="0 0 14 14"><path d="M2 2h4l2 2h4v8H2z"/><line x1="5" y1="8" x2="9" y2="8"/></svg>File Register</div>
+      <div class="nlbl">Work</div>
+      <div class="ni" onclick="nav('workflow',this)"><svg viewBox="0 0 14 14"><circle cx="3" cy="3" r="1.5"/><circle cx="11" cy="3" r="1.5"/><circle cx="7" cy="11" r="1.5"/><line x1="3" y1="4.5" x2="7" y2="9.5"/><line x1="11" y1="4.5" x2="7" y2="9.5"/></svg>Workflow Toolkit</div>
+      <div class="ni" onclick="nav('collab',this)"><svg viewBox="0 0 14 14"><circle cx="4.5" cy="4.5" r="2"/><circle cx="9.5" cy="4.5" r="2"/><path d="M1 12c0-1.9 1.6-3.5 3.5-3.5M13 12c0-1.9-1.6-3.5-3.5-3.5M7 8.5c1.4 0 2.5 1 2.5 2.5H4.5C4.5 9.5 5.6 8.5 7 8.5z"/></svg>Coordination</div>
+      <div class="nlbl">Support</div>
+      <div class="ni" onclick="nav('faq',this)"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="5" x2="7" y2="7.5"/><circle cx="7" cy="9.5" r="0.6" fill="currentColor" stroke="none"/></svg>FAQ &amp; Support</div>
+      <div class="ni" onclick="nav('collab2',this)"><svg viewBox="0 0 14 14"><path d="M1 1h12v9H8l-3 3V10H1z"/></svg>Collaboration</div>
+      <div class="ni" onclick="nav('roadmap',this)"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5"/><polyline points="7,3.5 7,7 9.5,8.5"/></svg>Roadmap</div>
+    </div>
+    <div class="user-area">
+      <div class="row"><div class="av">MC</div><div><div class="un">M. Collins</div><div class="ur">Arch. Technologist</div></div></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="bc-home">IDS Hub</span><span class="bc-sep">/</span><span class="bc-cur" id="bc">Dashboard</span>
+      <div class="search-bar"><svg viewBox="0 0 14 14"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="12.5" y2="12.5"/></svg>Search standards, guides, templates…</div>
+      <span class="pill p-green">● Live</span><span class="pill p-blue">BIM L1</span><span class="pill p-cyan">ACC On</span>
+    </div>
+
+    <div class="content" style="position:relative">
+
+      <!-- ✅ DASHBOARD — .on = default visible screen -->
+      <div class="screen on" id="s-dash">
+        <div class="hero">
+          <h2>Welcome to the IDS Digital Transformation Hub.</h2>
+          <p>One place for standards, support, training, and collaboration · Indvr Design Studio, Cork · 40 staff</p>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">
+            <button class="hbtn hbtn-solid" onclick="nav('bimlearn',document.querySelectorAll('.ni')[1])">Start BIM learning</button>
+            <button class="hbtn hbtn-ghost" onclick="nav('files',document.querySelectorAll('.ni')[4])">Access file standards</button>
+            <button class="hbtn hbtn-ghost" onclick="nav('training',document.querySelectorAll('.ni')[2])">View training modules</button>
+            <button class="hbtn hbtn-ghost" onclick="nav('faq',document.querySelectorAll('.ni')[8])">Ask for help</button>
+          </div>
+        </div>
+        <div class="g4">
+          <div class="metric"><div class="m-label">Modules done</div><div class="m-val">3<span style="font-size:13px;font-weight:400;color:var(--text3)">/8</span></div><div class="bar-wrap"><div class="bar" style="width:37%"></div></div></div>
+          <div class="metric"><div class="m-label">Team readiness</div><div class="m-val">61<span style="font-size:13px;font-weight:400;color:var(--text3)">%</span></div><div class="bar-wrap"><div class="bar g" style="width:61%"></div></div></div>
+          <div class="metric"><div class="m-label">FAQ searches</div><div class="m-val">142</div><div class="m-sub">This month</div></div>
+          <div class="metric"><div class="m-label">CWMF deadline</div><div class="m-val">84<span style="font-size:13px;font-weight:400;color:var(--text3)">d</span></div><div class="m-sub">Irish Gov. compliance</div></div>
+        </div>
+        <div class="g3" style="margin-bottom:12px">
+          <a class="quick-link" onclick="nav('bimlearn',document.querySelectorAll('.ni')[1])"><svg viewBox="0 0 14 14"><path d="M7 1L1 4.5l6 3 6-3-6-3.5z"/><path d="M1 9.5l6 3 6-3"/></svg><div><div style="font-size:12px;font-weight:500;color:var(--text)">BIM Learning Centre</div><div style="font-size:10px;color:var(--text3)">Beginner guides, glossary, videos</div></div></a>
+          <a class="quick-link" onclick="nav('workflow',document.querySelectorAll('.ni')[5])"><svg viewBox="0 0 14 14"><circle cx="3" cy="3" r="1.5"/><circle cx="11" cy="3" r="1.5"/><circle cx="7" cy="11" r="1.5"/><line x1="3" y1="4.5" x2="7" y2="9.5"/><line x1="11" y1="4.5" x2="7" y2="9.5"/></svg><div><div style="font-size:12px;font-weight:500;color:var(--text)">Workflow Toolkit</div><div style="font-size:10px;color:var(--text3)">SOPs, BEP, coordination checklists</div></div></a>
+          <a class="quick-link" onclick="nav('faq',document.querySelectorAll('.ni')[8])"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="5" x2="7" y2="7.5"/><circle cx="7" cy="9.5" r="0.6" fill="var(--blue2)" stroke="none"/></svg><div><div style="font-size:12px;font-weight:500;color:var(--text)">FAQ &amp; Support</div><div style="font-size:10px;color:var(--text3)">Quick answers, contact BIM lead</div></div></a>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="ct" style="margin-bottom:10px">My learning path</div>
+            <div class="tl-item"><div class="tl-dot td-g"></div><div><div style="font-size:12px;font-weight:500">BIM fundamentals</div><div style="font-size:10px;color:var(--text3)">Completed · 2 weeks ago</div></div></div>
+            <div class="tl-item"><div class="tl-dot td-g"></div><div><div style="font-size:12px;font-weight:500">Revit essentials for ATs</div><div style="font-size:10px;color:var(--text3)">Completed · 1 week ago</div></div></div>
+            <div class="tl-item"><div class="tl-dot td-a"></div><div><div style="font-size:12px;font-weight:500">ISO 19650 — information management</div><div style="font-size:10px;color:var(--text3)">In progress · 40%</div></div></div>
+            <div class="tl-item" style="margin-bottom:0"><div class="tl-dot td-n"></div><div><div style="font-size:12px;font-weight:500;color:var(--text3)">CDE setup — Autodesk ACC</div><div style="font-size:10px;color:var(--text3)">Locked</div></div></div>
+          </div>
+          <div class="card">
+            <div class="ct" style="margin-bottom:10px">Latest updates</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:flex-start;gap:8px;padding-bottom:8px;border-bottom:1px solid var(--bg2)"><div style="width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:12px;color:var(--text);font-weight:500">New file naming convention guide published</div><div style="font-size:10px;color:var(--text3)">Today · File Standards</div></div></div>
+              <div style="display:flex;align-items:flex-start;gap:8px;padding-bottom:8px;border-bottom:1px solid var(--bg2)"><div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:12px;color:var(--text);font-weight:500">Workshop: Revit for Structural Engineers — Fri 11 Apr</div><div style="font-size:10px;color:var(--text3)">Yesterday · Training</div></div></div>
+              <div style="display:flex;align-items:flex-start;gap:8px"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue2);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:12px;color:var(--text);font-weight:500">ACC CDE now live — onboarding guide available</div><div style="font-size:10px;color:var(--text3)">2 days ago · Standards</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="row" style="margin-bottom:10px;justify-content:space-between"><div class="ct">Discipline readiness</div><span class="pill p-blue">40 staff · 5 disciplines</span></div>
+          <div class="disc-row"><div class="disc-name">Architecture</div><div class="disc-track"><div class="disc-fill" style="width:72%;background:var(--green)"></div></div><span style="font-size:10px;color:var(--text3);min-width:25px">72%</span></div>
+          <div class="disc-row"><div class="disc-name">Structural</div><div class="disc-track"><div class="disc-fill" style="width:55%;background:var(--blue2)"></div></div><span style="font-size:10px;color:var(--text3);min-width:25px">55%</span></div>
+          <div class="disc-row"><div class="disc-name">Mechanical</div><div class="disc-track"><div class="disc-fill" style="width:38%;background:var(--amber)"></div></div><span style="font-size:10px;color:var(--text3);min-width:25px">38%</span></div>
+          <div class="disc-row"><div class="disc-name">Electrical</div><div class="disc-track"><div class="disc-fill" style="width:30%;background:var(--red)"></div></div><span style="font-size:10px;color:var(--text3);min-width:25px">30%</span></div>
+          <div class="disc-row" style="margin-bottom:0"><div class="disc-name">Civil</div><div class="disc-track"><div class="disc-fill" style="width:60%;background:var(--blue2)"></div></div><span style="font-size:10px;color:var(--text3);min-width:25px">60%</span></div>
+        </div>
+      </div>
+
+      <!-- BIM LEARNING CENTRE -->
+      <div class="screen" id="s-bimlearn">
+        <div class="ph">BIM Learning Centre</div>
+        <div class="psub">Build your BIM knowledge from the ground up — beginner guides, videos, glossary and self-assessment.</div>
+        <div class="tab-bar">
+          <div class="tab on" id="bl-intro" onclick="btab('intro',this)">Introduction</div>
+          <div class="tab" id="bl-levels" onclick="btab('levels',this)">BIM levels</div>
+          <div class="tab" id="bl-ireland" onclick="btab('ireland',this)">Irish public sector</div>
+          <div class="tab" id="bl-gloss" onclick="btab('gloss',this)">Glossary</div>
+          <div class="tab" id="bl-quiz" onclick="btab('quiz',this)">Self-assessment</div>
+        </div>
+        <div id="bl-intro-c">
+          <div class="info-strip"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="5" x2="7" y2="7.5"/><circle cx="7" cy="9.5" r="0.6" fill="var(--blue2)" stroke="none"/></svg><span>Start here if you are new to BIM. Work through each section in order before moving to software training.</span></div>
+          <div class="g3">
+            <div class="learn-card"><div class="row"><div class="lc-num">1</div><div class="ct">What is BIM?</div><span class="pill p-green" style="margin-left:auto">Done</span></div><p style="font-size:11px;color:var(--text2)">Building Information Modelling connects geometry, data, documentation and collaboration into one coordinated workflow.</p><div class="bar-wrap"><div class="bar g" style="width:100%"></div></div></div>
+            <div class="learn-card"><div class="row"><div class="lc-num">2</div><div class="ct">Why BIM matters for IDS</div><span class="pill p-green" style="margin-left:auto">Done</span></div><p style="font-size:11px;color:var(--text2)">Reduce rework, improve coordination, meet CWMF contractual requirements on public sector projects.</p><div class="bar-wrap"><div class="bar g" style="width:100%"></div></div></div>
+            <div class="learn-card"><div class="row"><div class="lc-num">3</div><div class="ct">Key BIM concepts</div><span class="pill p-amber" style="margin-left:auto">In progress</span></div><p style="font-size:11px;color:var(--text2)">CDE, containers, information delivery milestones, BEP and Employer's Information Requirements (EIR).</p><div class="bar-wrap"><div class="bar" style="width:45%"></div></div></div>
+            <div class="learn-card"><div class="row"><div class="lc-num">4</div><div class="ct">BIM roles at IDS</div><span class="pill p-gray" style="margin-left:auto">Upcoming</span></div><p style="font-size:11px;color:var(--text2)">BIM Coordinator, Information Manager, task team members, appointing and appointed party roles.</p><div class="bar-wrap"><div class="bar" style="width:0%"></div></div></div>
+            <div class="learn-card"><div class="row"><div class="lc-num">5</div><div class="ct">The CDE workflow</div><span class="pill p-gray" style="margin-left:auto">Upcoming</span></div><p style="font-size:11px;color:var(--text2)">How information flows WIP → Shared → Published → Archived in ACC. Suitability codes S0–S6.</p><div class="bar-wrap"><div class="bar" style="width:0%"></div></div></div>
+            <div class="learn-card"><div class="row"><div class="lc-num">6</div><div class="ct">BIM deliverables</div><span class="pill p-gray" style="margin-left:auto">Upcoming</span></div><p style="font-size:11px;color:var(--text2)">PIMs, AIMs, clash reports, COBie data, federated models and client-facing BIM outputs.</p><div class="bar-wrap"><div class="bar" style="width:0%"></div></div></div>
+          </div>
+        </div>
+        <div id="bl-levels-c" style="display:none"><div class="g3"><div class="card-sm"><div style="font-size:22px;font-weight:700;color:var(--blue2);font-family:var(--mono);margin-bottom:6px">L0</div><div class="ct" style="margin-bottom:5px">2D CAD</div><p style="font-size:11px;color:var(--text2)">Unmanaged CAD, paper-based. No common standards. Files stored locally.</p></div><div class="card-sm" style="border-color:var(--amber)"><div style="font-size:22px;font-weight:700;color:var(--amber);font-family:var(--mono);margin-bottom:6px">L1</div><div class="ct" style="margin-bottom:5px">Managed 2D/3D</div><p style="font-size:11px;color:var(--text2)">2D/3D CAD with shared CDE and basic naming. IDS target for all staff by Month 9.</p><span class="pill p-amber" style="margin-top:8px;display:inline-flex">IDS target now</span></div><div class="card-sm" style="border-color:var(--blue2)"><div style="font-size:22px;font-weight:700;color:var(--blue2);font-family:var(--mono);margin-bottom:6px">L2</div><div class="ct" style="margin-bottom:5px">Collaborative BIM</div><p style="font-size:11px;color:var(--text2)">Federated models. ISO 19650 compliant. CDE mandatory. Required for CWMF projects by Month 15.</p><span class="pill p-blue" style="margin-top:8px;display:inline-flex">CWMF required</span></div></div></div>
+        <div id="bl-ireland-c" style="display:none"><div class="card"><div class="ct" style="margin-bottom:10px">Irish Government BIM requirements</div><p style="font-size:12px;color:var(--text2);margin-bottom:12px">The CWMF is introducing BIM as a mandatory requirement for public capital projects. IDS must be BIM-ready to tender for public sector work.</p><div style="display:flex;flex-direction:column;gap:8px"><div class="card-sm"><div class="row"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0"></div><div class="ct" style="font-size:11px">Mandated ISO 19650-2 compliance on all capital projects</div></div></div><div class="card-sm"><div class="row"><div style="width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0"></div><div class="ct" style="font-size:11px">BEP required pre- and post-appointment from all parties</div></div></div><div class="card-sm"><div class="row"><div style="width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0"></div><div class="ct" style="font-size:11px">CDE mandatory — ACC configured as IDS CDE platform</div></div></div><div class="card-sm"><div class="row"><div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0"></div><div class="ct" style="font-size:11px">BIM Level 2 required for projects over €100m threshold</div></div></div></div></div></div>
+        <div id="bl-gloss-c" style="display:none"><div class="card"><div class="ct" style="margin-bottom:10px">BIM glossary</div><table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="mono" style="color:var(--blue2)">BEP</td><td style="color:var(--text2)">BIM Execution Plan — defines how BIM will be delivered on a project</td></tr><tr><td class="mono" style="color:var(--blue2)">CDE</td><td style="color:var(--text2)">Common Data Environment — single source of truth (IDS uses ACC)</td></tr><tr><td class="mono" style="color:var(--blue2)">EIR</td><td style="color:var(--text2)">Employer's Information Requirements — client's digital delivery requirements</td></tr><tr><td class="mono" style="color:var(--blue2)">PIM</td><td style="color:var(--text2)">Project Information Model — live model during design and construction</td></tr><tr><td class="mono" style="color:var(--blue2)">AIM</td><td style="color:var(--text2)">Asset Information Model — handed over to client at completion</td></tr><tr><td class="mono" style="color:var(--blue2)">LOD</td><td style="color:var(--text2)">Level of Development — detail in a model element at each stage</td></tr><tr><td class="mono" style="color:var(--blue2)">BCF</td><td style="color:var(--text2)">BIM Collaboration Format — open standard for model-based issues</td></tr><tr><td class="mono" style="color:var(--blue2)">IFC</td><td style="color:var(--text2)">Industry Foundation Classes — open format for BIM model exchange</td></tr></tbody></table></div></div>
+        <div id="bl-quiz-c" style="display:none"><div class="card"><div class="ct" style="margin-bottom:4px">Digital skills self-assessment</div><p style="font-size:11px;color:var(--text2);margin-bottom:14px">Rate your confidence in each area to generate a personalised training recommendation.</p><div style="display:flex;flex-direction:column;gap:12px"><div><div style="font-size:12px;font-weight:500;margin-bottom:6px">1. How confident are you using Revit?</div><div style="display:flex;gap:6px" data-q="1"><button class="btn btn-ghost ql" onclick="qsel(this,'1')">Not confident</button><button class="btn btn-ghost ql" onclick="qsel(this,'1')">Some experience</button><button class="btn btn-ghost ql" onclick="qsel(this,'1')">Confident</button><button class="btn btn-ghost ql" onclick="qsel(this,'1')">Expert</button></div></div><div><div style="font-size:12px;font-weight:500;margin-bottom:6px">2. Do you understand ISO 19650 naming?</div><div style="display:flex;gap:6px" data-q="2"><button class="btn btn-ghost ql" onclick="qsel(this,'2')">Not at all</button><button class="btn btn-ghost ql" onclick="qsel(this,'2')">Heard of it</button><button class="btn btn-ghost ql" onclick="qsel(this,'2')">Understand basics</button><button class="btn btn-ghost ql" onclick="qsel(this,'2')">Apply it daily</button></div></div><div><div style="font-size:12px;font-weight:500;margin-bottom:6px">3. Have you worked on a BIM-compliant project?</div><div style="display:flex;gap:6px" data-q="3"><button class="btn btn-ghost ql" onclick="qsel(this,'3')">Never</button><button class="btn btn-ghost ql" onclick="qsel(this,'3')">Partially</button><button class="btn btn-ghost ql" onclick="qsel(this,'3')">Yes, one</button><button class="btn btn-ghost ql" onclick="qsel(this,'3')">Multiple</button></div></div></div><div style="margin-top:14px"><button class="btn btn-primary" onclick="submitQuiz()">Get my training recommendation</button></div><div id="quiz-result" style="display:none;margin-top:12px;padding:12px;background:var(--accent-light);border-radius:var(--r);border:1px solid var(--accent-mid)"><div style="font-size:12px;font-weight:600;color:var(--blue2);margin-bottom:4px">Recommended: Beginner track</div><div style="font-size:11px;color:var(--text2)">BIM Fundamentals → ISO 19650 → Revit Essentials. Estimated 3.5 hours. Available on demand in the Training Portal.</div></div></div></div>
+      </div>
+
+      <!-- TRAINING PORTAL -->
+      <div class="screen" id="s-training">
+        <div class="ph">Training portal</div><div class="psub">Role-based learning paths, workshops and digital skills badges.</div>
+        <div class="g2" style="margin-bottom:12px">
+          <div class="card"><div class="ct" style="margin-bottom:10px">My progress</div>
+            <div class="disc-row"><div class="disc-name" style="width:110px">BIM fundamentals</div><div class="disc-track"><div class="disc-fill" style="width:100%;background:var(--green)"></div></div><span class="pill p-green" style="flex-shrink:0">Done</span></div>
+            <div class="disc-row"><div class="disc-name" style="width:110px">Revit essentials</div><div class="disc-track"><div class="disc-fill" style="width:100%;background:var(--green)"></div></div><span class="pill p-green" style="flex-shrink:0">Done</span></div>
+            <div class="disc-row"><div class="disc-name" style="width:110px">ISO 19650</div><div class="disc-track"><div class="disc-fill" style="width:40%;background:var(--blue2)"></div></div><span class="pill p-amber" style="flex-shrink:0">40%</span></div>
+            <div class="disc-row" style="margin-bottom:0"><div class="disc-name" style="width:110px">ACC CDE</div><div class="disc-track"><div class="disc-fill" style="width:0%"></div></div><span class="pill p-gray" style="flex-shrink:0">Locked</span></div>
+            <div class="badge-strip"><span class="skill-badge earned">BIM Level 0</span><span class="skill-badge earned">Revit Beginner</span><span class="skill-badge">ISO 19650</span><span class="skill-badge">CDE Certified</span></div>
+          </div>
+          <div class="card"><div class="ct" style="margin-bottom:10px">Upcoming workshops</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="padding:9px 11px;background:var(--bg);border-radius:var(--r);border-left:3px solid var(--blue2)"><div style="font-size:12px;font-weight:500">Revit for Structural Engineers</div><div style="font-size:10px;color:var(--text3)">Fri 11 Apr · 10:00–12:00 · Cork Office</div><span class="pill p-amber" style="margin-top:5px;display:inline-flex">5 seats left</span></div>
+              <div style="padding:9px 11px;background:var(--bg);border-radius:var(--r);border-left:3px solid var(--green)"><div style="font-size:12px;font-weight:500">ISO 19650 for M&amp;E teams</div><div style="font-size:10px;color:var(--text3)">Wed 16 Apr · 14:00–15:30 · Online</div><span class="pill p-blue" style="margin-top:5px;display:inline-flex">Open</span></div>
+              <div style="padding:9px 11px;background:var(--bg);border-radius:var(--r);border-left:3px solid var(--purple)"><div style="font-size:12px;font-weight:500">Twinmotion VR presentations</div><div style="font-size:10px;color:var(--text3)">Thu 24 Apr · 13:00–14:30 · Cork Office</div><span class="pill p-blue" style="margin-top:5px;display:inline-flex">Open</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="g3">
+          <div class="mod-card amod"><div class="mod-icon mi-b"><svg viewBox="0 0 16 16" stroke="currentColor"><rect x="3" y="1" width="10" height="14" rx="1"/><line x1="6" y1="5" x2="10" y2="5"/><line x1="6" y1="8" x2="10" y2="8"/></svg></div><div class="row" style="margin-bottom:5px"><div class="ct" style="flex:1">ISO 19650</div><span class="pill p-amber">Active</span></div><p style="font-size:11px;color:var(--text2);margin-bottom:8px">Naming, metadata, suitability codes and CDE workflow.</p><div class="bar-wrap"><div class="bar" style="width:40%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">5 lessons · 60 min</div></div>
+          <div class="mod-card"><div class="mod-icon mi-g"><svg viewBox="0 0 16 16" stroke="currentColor"><rect x="1" y="3" width="14" height="10" rx="1"/><line x1="5" y1="7" x2="11" y2="7"/></svg></div><div class="row" style="margin-bottom:5px"><div class="ct" style="flex:1">Autodesk ACC (CDE)</div><span class="pill p-gray">Locked</span></div><p style="font-size:11px;color:var(--text2);margin-bottom:8px">CDE setup, container states, transmittals and permissions.</p><div class="bar-wrap"><div class="bar" style="width:0%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">5 lessons · 70 min</div></div>
+          <div class="mod-card"><div class="mod-icon mi-g"><svg viewBox="0 0 16 16" stroke="currentColor"><circle cx="8" cy="8" r="5"/><path d="M8 3v5l3 2"/></svg></div><div class="row" style="margin-bottom:5px"><div class="ct" style="flex:1">Navisworks Manage</div><span class="pill p-gray">Locked</span></div><p style="font-size:11px;color:var(--text2);margin-bottom:8px">Federated models, Clash Detective, BCF issue export.</p><div class="bar-wrap"><div class="bar" style="width:0%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">4 lessons · 55 min</div></div>
+          <div class="mod-card"><div class="mod-icon mi-a"><svg viewBox="0 0 16 16" stroke="currentColor"><rect x="1" y="3" width="14" height="10" rx="1"/><circle cx="8" cy="8" r="2"/></svg></div><div class="row" style="margin-bottom:5px"><div class="ct" style="flex:1">Twinmotion &amp; Arkio VR</div><span class="pill p-gray">Locked</span></div><p style="font-size:11px;color:var(--text2);margin-bottom:8px">Client walkthroughs with Meta Quest 3.</p><div class="bar-wrap"><div class="bar" style="width:0%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">3 lessons · 40 min</div></div>
+          <div class="mod-card"><div class="mod-icon mi-p"><svg viewBox="0 0 16 16" stroke="currentColor"><circle cx="5" cy="5" r="2"/><circle cx="11" cy="5" r="2"/><path d="M1 14c0-2.2 1.8-4 4-4M15 14c0-2.2-1.8-4-4-4"/><line x1="8" y1="8" x2="8" y2="14"/></svg></div><div class="row" style="margin-bottom:5px"><div class="ct" style="flex:1">Cross-discipline coordination</div><span class="pill p-gray">Locked</span></div><p style="font-size:11px;color:var(--text2);margin-bottom:8px">Federated models, clash workflows, design freeze.</p><div class="bar-wrap"><div class="bar" style="width:0%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">4 lessons · 55 min</div></div>
+          <div class="mod-card"><div class="mod-icon mi-t"><svg viewBox="0 0 16 16" stroke="currentColor"><path d="M3 8h10M8 3l5 5-5 5"/></svg></div><div class="row" style="margin-bottom:5px"><div class="ct" style="flex:1">AutoCAD to Revit migration</div><span class="pill p-gray">Locked</span></div><p style="font-size:11px;color:var(--text2);margin-bottom:8px">Transitioning CAD workflows and hybrid project management.</p><div class="bar-wrap"><div class="bar" style="width:0%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">4 lessons · 50 min</div></div>
+        </div>
+      </div>
+
+      <!-- BIM STANDARDS -->
+      <div class="screen" id="s-standards">
+        <div class="ph">BIM standards</div><div class="psub">ISO 19650 series and IDS naming conventions aligned to Irish Government CWMF requirements.</div>
+        <div class="tab-bar">
+          <div class="tab on" id="t-iso" onclick="stab('iso',this)">ISO 19650 series</div>
+          <div class="tab" id="t-naming" onclick="stab('naming',this)">Naming convention</div>
+          <div class="tab" id="t-suit" onclick="stab('suit',this)">Suitability codes</div>
+          <div class="tab" id="t-chk" onclick="stab('chk',this)">CWMF checklist</div>
+        </div>
+        <div id="st-iso">
+          <div class="iso-part"><div class="iso-header"><div class="iso-badge">Part 1</div><div class="iso-title">ISO 19650-1:2018 — Concepts and principles</div><span class="pill p-green" style="flex-shrink:0">Foundational</span></div><div class="iso-body"><p style="font-size:12px;color:var(--text2);margin-bottom:10px">Establishes overarching concepts for managing information over the whole life cycle of a built asset.</p><div class="iso-row"><div class="iso-dot"></div><div style="font-size:12px;color:var(--text2)">Defines information management roles: appointing party vs appointed party</div></div><div class="iso-row"><div class="iso-dot"></div><div style="font-size:12px;color:var(--text2)">Introduces CDE and container-based information management</div></div><div class="iso-row"><div class="iso-dot"></div><div style="font-size:12px;color:var(--text2)">Sets out the PIM and AIM framework</div></div><div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border-radius:var(--r);margin-top:8px;border:1px solid var(--border)"><span style="flex:1;font-size:11px;color:var(--text2)">BS EN ISO 19650-1:2018</span><a class="btn btn-ghost" style="font-size:10px;padding:3px 8px" href="https://www.iso.org/standard/68078.html">ISO.org</a></div></div></div>
+          <div class="iso-part"><div class="iso-header"><div class="iso-badge">Part 2</div><div class="iso-title">ISO 19650-2:2018 — Delivery phase</div><span class="pill p-blue" style="flex-shrink:0">Design &amp; Construction</span></div><div class="iso-body"><p style="font-size:12px;color:var(--text2);margin-bottom:10px">Primary standard for IDS project delivery. Required for CWMF compliance.</p><div class="iso-row"><div class="iso-dot"></div><div style="font-size:12px;color:var(--text2)">Mandates ISO 19650 naming convention for all containers</div></div><div class="iso-row"><div class="iso-dot"></div><div style="font-size:12px;color:var(--text2)">Specifies suitability codes (S0–S7), revisions (P01→C01) and CDE transitions</div></div><div class="iso-row"><div class="iso-dot"></div><div style="font-size:12px;color:var(--text2)">Requires pre- and post-appointment BEP from all parties</div></div><div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border-radius:var(--r);margin-top:8px;border:1px solid var(--border)"><span style="flex:1;font-size:11px;color:var(--text2)">BS EN ISO 19650-2:2018</span><a class="btn btn-ghost" style="font-size:10px;padding:3px 8px" href="https://www.iso.org/standard/68080.html">ISO.org</a></div></div></div>
+          <div class="iso-part"><div class="iso-header"><div class="iso-badge">Part 3</div><div class="iso-title">ISO 19650-3:2020 — Operational phase</div><span class="pill p-purple" style="flex-shrink:0">Facilities &amp; Operations</span></div><div class="iso-body"><p style="font-size:12px;color:var(--text2);margin-bottom:10px">Extends ISO 19650 into the operational phase — FM, maintenance and end-of-life.</p><div class="iso-row"><div class="iso-dot"></div><div style="font-size:12px;color:var(--text2)">Defines OIR and AIR for FM teams</div></div><div class="iso-row"><div class="iso-dot"></div><div style="font-size:12px;color:var(--text2)">Specifies PIM → AIM transition at handover — golden thread of information</div></div><div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border-radius:var(--r);margin-top:8px;border:1px solid var(--border)"><span style="flex:1;font-size:11px;color:var(--text2)">BS EN ISO 19650-3:2020</span><a class="btn btn-ghost" style="font-size:10px;padding:3px 8px" href="https://www.iso.org/standard/75056.html">ISO.org</a></div></div></div>
+        </div>
+        <div id="st-naming" style="display:none"><div class="g2"><div class="card"><div class="ct" style="margin-bottom:9px">ISO 19650 naming convention</div><div class="code-block"><span class="hl">{Project}</span><span class="hs">_</span><span class="hl">{Originator}</span><span class="hs">_</span><span class="hl">{Volume}</span><span class="hs">_</span><span class="hl">{Level}</span><span class="hs">_</span><span class="hl">{Type}</span><span class="hs">_</span><span class="hl">{Role}</span><span class="hs">_</span><span class="hl">{Number}</span><br><span class="hs">————————————————————</span><br><span class="hv">IDS-2401_IDS_ZZ_GF_DR_A_0001</span></div><div style="margin-top:9px;display:flex;flex-wrap:wrap;gap:4px"><span class="pill p-blue">IDS-2401</span><span class="pill p-blue">IDS</span><span class="pill p-blue">ZZ</span><span class="pill p-blue">GF</span><span class="pill p-blue">DR</span><span class="pill p-blue">A</span><span class="pill p-blue">0001</span></div></div><div class="card"><div class="ct" style="margin-bottom:9px">Metadata fields</div><table style="font-size:11px"><thead><tr><th>Field</th><th>Codes</th><th>Meaning</th></tr></thead><tbody><tr><td class="mono">Volume</td><td class="mono">ZZ B1 SS EX</td><td style="color:var(--text2)">Whole/Block/Site/Existing</td></tr><tr><td class="mono">Level</td><td class="mono">ZZ GF L01 RF</td><td style="color:var(--text2)">All/Ground/1st/Roof</td></tr><tr><td class="mono">Type</td><td class="mono">DR MO CA SP</td><td style="color:var(--text2)">Drawing/Model/Calc./Spec.</td></tr><tr><td class="mono">Role</td><td class="mono">A S M E C X</td><td style="color:var(--text2)">Arch/Struct/Mech/Elec/Civil/Multi</td></tr><tr><td class="mono">Revision</td><td class="mono">P01→C01</td><td style="color:var(--text2)">Preliminary/Contractual</td></tr></tbody></table></div></div></div>
+        <div id="st-suit" style="display:none"><div class="card"><div class="ct" style="margin-bottom:10px">Suitability codes — ISO 19650-2</div><div style="display:flex;flex-direction:column;gap:6px"><div class="card-sm"><div class="row"><span class="mono" style="min-width:30px;font-size:12px;font-weight:600">S0</span><div><div style="font-size:12px;font-weight:500">Work in progress</div><div style="font-size:11px;color:var(--text2)">Not for issue — WIP zone only</div></div><span class="pill p-gray" style="margin-left:auto">WIP</span></div></div><div class="card-sm"><div class="row"><span class="mono" style="color:var(--blue2);min-width:30px;font-size:12px;font-weight:600">S1</span><div><div style="font-size:12px;font-weight:500">Suitable for coordination</div><div style="font-size:11px;color:var(--text2)">Shared with disciplines for clash detection only</div></div><span class="pill p-blue" style="margin-left:auto">Shared</span></div></div><div class="card-sm"><div class="row"><span class="mono" style="color:var(--teal);min-width:30px;font-size:12px;font-weight:600">S2</span><div><div style="font-size:12px;font-weight:500">Suitable for information</div><div style="font-size:11px;color:var(--text2)">Issued to client for information</div></div><span class="pill p-teal" style="margin-left:auto">Published</span></div></div><div class="card-sm"><div class="row"><span class="mono" style="color:var(--purple);min-width:30px;font-size:12px;font-weight:600">S3</span><div><div style="font-size:12px;font-weight:500">Suitable for review</div><div style="font-size:11px;color:var(--text2)">Submitted for client approval</div></div><span class="pill p-purple" style="margin-left:auto">Review</span></div></div><div class="card-sm"><div class="row"><span class="mono" style="color:var(--green);min-width:30px;font-size:12px;font-weight:600">S4</span><div><div style="font-size:12px;font-weight:500">Suitable for construction</div><div style="font-size:11px;color:var(--text2)">Approved. Contractual revision begins (C01…)</div></div><span class="pill p-green" style="margin-left:auto">Constr.</span></div></div><div class="card-sm"><div class="row"><span class="mono" style="color:var(--text3);min-width:30px;font-size:12px;font-weight:600">S6</span><div><div style="font-size:12px;font-weight:500">Superseded / archived</div><div style="font-size:11px;color:var(--text2)">Replaced. Retained for audit. Do not use.</div></div><span class="pill p-gray" style="margin-left:auto">Archive</span></div></div></div></div></div>
+        <div id="st-chk" style="display:none"><div class="card"><div class="ct" style="margin-bottom:10px">CWMF compliance checklist</div><div class="chk-row"><div class="chk done" id="c1" onclick="tgl('c1')"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="white" stroke-width="2"><polyline points="1,4.5 3.5,7 8,2"/></svg></div><div style="font-size:12px;color:var(--text)">Appoint BIM Coordinator (ISO 19650-2 §5.1)</div></div><div class="chk-row"><div class="chk done" id="c2" onclick="tgl('c2')"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="white" stroke-width="2"><polyline points="1,4.5 3.5,7 8,2"/></svg></div><div style="font-size:12px;color:var(--text)">Draft IDS BIM Execution Plan (BEP) aligned to ISO 19650-2 Annex A</div></div><div class="chk-row"><div class="chk" id="c3" onclick="tgl('c3')"></div><div style="font-size:12px;color:var(--text)">Define Employer's Information Requirements (EIR) process</div></div><div class="chk-row"><div class="chk" id="c4" onclick="tgl('c4')"></div><div style="font-size:12px;color:var(--text)">Configure Autodesk Construction Cloud (ACC) as IDS CDE</div></div><div class="chk-row"><div class="chk" id="c5" onclick="tgl('c5')"></div><div style="font-size:12px;color:var(--text)">Implement ISO 19650-2 naming convention across all projects</div></div><div class="chk-row"><div class="chk" id="c6" onclick="tgl('c6')"></div><div style="font-size:12px;color:var(--text)">Complete BIM Level 1 training for all 40 IDS staff</div></div><div class="chk-row" style="border-bottom:none"><div class="chk" id="c7" onclick="tgl('c7')"></div><div style="font-size:12px;color:var(--text)">Deliver first pilot project to ISO 19650-2 standard</div></div></div></div>
+      </div>
+
+      <!-- FILE REGISTER — ✅ no .on class here -->
+      <div class="screen" id="s-files">
+        <div class="ph">File register</div>
+        <div class="psub">Project IDS-2401 — all containers named under ISO 19650-2. Filter by role or suitability.</div>
+        <div class="info-strip"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="5" x2="7" y2="7.5"/><circle cx="7" cy="9.5" r="0.6" fill="var(--blue2)" stroke="none"/></svg><span>Naming format: <span style="font-family:var(--mono)">{Project}_{Originator}_{Volume}_{Level}_{Type}_{Role}_{Number}</span> · Revisions: P01–P99 (preliminary) then C01 (contractual)</span></div>
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap">
+            <div class="ct">IDS-2401 — Indvr Design Studio, Cork</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <select style="font-size:11px;padding:4px 8px;border:1px solid var(--border);border-radius:var(--r);color:var(--text2);background:var(--surface)" id="fr"><option value="">All roles</option><option value="A">A — Architecture</option><option value="S">S — Structural</option><option value="M">M — Mechanical</option><option value="E">E — Electrical</option><option value="C">C — Civil</option><option value="X">X — Multi-disc.</option></select>
+              <select style="font-size:11px;padding:4px 8px;border:1px solid var(--border);border-radius:var(--r);color:var(--text2);background:var(--surface)" id="fs"><option value="">All suitability</option><option value="S0">S0 — WIP</option><option value="S1">S1 — Coord.</option><option value="S2">S2 — Info</option></select>
+              <button class="btn btn-upload" onclick="openUpload()">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2"><polyline points="6.5,9 6.5,2"/><polyline points="3,5 6.5,1.5 10,5"/><path d="M1 10v1.5a1 1 0 001 1h9a1 1 0 001-1V10"/></svg>
+                Upload document
+              </button>
+            </div>
+          </div>
+          <table id="ftable" style="table-layout:fixed;width:100%">
+            <colgroup><col style="width:34%"><col style="width:20%"><col style="width:7%"><col style="width:5%"><col style="width:14%"><col style="width:10%"><col style="width:10%"></colgroup>
+            <thead><tr><th>File reference (ISO 19650-2)</th><th>Description</th><th>Type</th><th>Role</th><th>Suitability</th><th>Revision</th><th>Updated</th></tr></thead>
+            <tbody id="ftbody"></tbody>
+          </table>
+        </div>
+        <!-- UPLOAD MODAL -->
+        <div class="modal-overlay" id="upload-modal" style="display:none">
+          <div class="modal-box">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <div><div class="modal-title">Upload document to file register</div><div class="modal-sub">File will be named automatically from the metadata fields below.</div></div>
+              <button onclick="closeUpload()" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--text3)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg></button>
+            </div>
+            <div class="drop-zone" id="drop-zone" onclick="triggerFile()">
+              <div class="drop-icon"><svg viewBox="0 0 18 18"><polyline points="9,12 9,4"/><polyline points="5,7 9,3 13,7"/><path d="M2 13v2a1 1 0 001 1h12a1 1 0 001-1v-2"/></svg></div>
+              <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px" id="drop-label">Drop file here or click to browse</div>
+              <div style="font-size:10px;color:var(--text3)">Accepts .rvt .dwg .pdf .docx .xlsx .nwd</div>
+              <input type="file" id="file-input" style="display:none" onchange="fileChosen(this)">
+            </div>
+            <div class="preview-row" id="name-preview">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--blue2)" stroke-width="1.7"><path d="M2 1h6l3 3v8H2z"/><polyline points="7,1 7,4 10,4"/></svg>
+              <span class="preview-filename" id="preview-name">IDS-2401_IDS_ZZ_GF_DR_A_0001</span>
+              <span class="pill p-gray" id="preview-suit">S0</span>
+            </div>
+            <div class="field-row">
+              <div style="flex:1"><div class="field-label">Volume</div><select class="field-select" id="up-vol" onchange="updatePreview()"><option value="ZZ">ZZ — Whole building</option><option value="B1">B1 — Block 1</option><option value="SS">SS — Site</option><option value="EX">EX — Existing</option></select></div>
+              <div style="flex:1"><div class="field-label">Level</div><select class="field-select" id="up-lvl" onchange="updatePreview()"><option value="ZZ">ZZ — All levels</option><option value="GF">GF — Ground floor</option><option value="L01">L01 — Level 1</option><option value="L02">L02 — Level 2</option><option value="RF">RF — Roof</option><option value="B1">B1 — Basement</option></select></div>
+            </div>
+            <div class="field-row">
+              <div style="flex:1"><div class="field-label">Document type</div><select class="field-select" id="up-type" onchange="updatePreview()"><option value="DR">DR — Drawing</option><option value="MO">MO — Model</option><option value="CA">CA — Calculation</option><option value="SP">SP — Specification</option><option value="SC">SC — Schedule</option><option value="RS">RS — Report</option></select></div>
+              <div style="flex:1"><div class="field-label">Discipline role</div><select class="field-select" id="up-role" onchange="updatePreview()"><option value="A">A — Architecture</option><option value="S">S — Structural</option><option value="M">M — Mechanical</option><option value="E">E — Electrical</option><option value="C">C — Civil</option><option value="X">X — Multi-discipline</option></select></div>
+            </div>
+            <div class="field-row">
+              <div style="flex:1"><div class="field-label">Description</div><input class="field-input" id="up-desc" type="text" placeholder="e.g. Ground floor GA plan" oninput="updatePreview()"></div>
+              <div style="width:100px"><div class="field-label">Suitability</div><select class="field-select" id="up-suit" onchange="updatePreview()"><option value="S0">S0 — WIP</option><option value="S1">S1 — Coord.</option><option value="S2">S2 — Info</option><option value="S3">S3 — Review</option></select></div>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+              <button class="btn btn-ghost" onclick="closeUpload()">Cancel</button>
+              <button class="btn btn-primary" onclick="confirmUpload()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2"><polyline points="6,9 6,2"/><polyline points="3,5 6,2 9,5"/><path d="M1 9.5v1a1 1 0 001 1h8a1 1 0 001-1v-1"/></svg>Upload to register</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKFLOW TOOLKIT -->
+      <div class="screen" id="s-workflow">
+        <div class="ph">Project Workflow Toolkit</div><div class="psub">SOPs, stage guide, BEP template and coordination checklists.</div>
+        <div class="tab-bar">
+          <div class="tab on" id="wt-sop" onclick="wtab('sop',this)">SOPs</div>
+          <div class="tab" id="wt-stage" onclick="wtab('stage',this)">Stage guide</div>
+          <div class="tab" id="wt-bep" onclick="wtab('bep',this)">BEP template</div>
+          <div class="tab" id="wt-coord" onclick="wtab('coord',this)">Coordination checklist</div>
+        </div>
+        <div id="wt-sop-c">
+          <div class="g2">
+            <div class="card"><div class="ct" style="margin-bottom:10px">Standard operating procedures</div>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)"><div style="width:26px;height:26px;border-radius:5px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--blue2)" stroke-width="1.7"><rect x="1" y="1" width="11" height="11" rx="1"/><line x1="3.5" y1="5" x2="9.5" y2="5"/><line x1="3.5" y1="8" x2="7" y2="8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:500">SOP-01: Starting a new project in ACC</div><div style="font-size:10px;color:var(--text3)">CDE setup, folder structure, team permissions</div></div><span class="pill p-green">Published</span></div>
+                <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)"><div style="width:26px;height:26px;border-radius:5px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--blue2)" stroke-width="1.7"><rect x="1" y="1" width="11" height="11" rx="1"/><line x1="3.5" y1="5" x2="9.5" y2="5"/><line x1="3.5" y1="8" x2="7" y2="8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:500">SOP-02: Naming and uploading project files</div><div style="font-size:10px;color:var(--text3)">ISO 19650 naming, suitability codes, revision numbering</div></div><span class="pill p-green">Published</span></div>
+                <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)"><div style="width:26px;height:26px;border-radius:5px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--blue2)" stroke-width="1.7"><rect x="1" y="1" width="11" height="11" rx="1"/><line x1="3.5" y1="5" x2="9.5" y2="5"/><line x1="3.5" y1="8" x2="7" y2="8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:500">SOP-03: Issuing a drawing revision</div><div style="font-size:10px;color:var(--text3)">Revision workflow: WIP → Shared → Published</div></div><span class="pill p-green">Published</span></div>
+                <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)"><div style="width:26px;height:26px;border-radius:5px;background:var(--amber-light);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--amber)" stroke-width="1.7"><rect x="1" y="1" width="11" height="11" rx="1"/><line x1="3.5" y1="5" x2="9.5" y2="5"/><line x1="3.5" y1="8" x2="7" y2="8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:500">SOP-04: Cross-discipline model coordination</div><div style="font-size:10px;color:var(--text3)">Navisworks clash detection, BCF issue tracking</div></div><span class="pill p-amber">Draft</span></div>
+              </div>
+            </div>
+            <div class="card"><div class="ct" style="margin-bottom:10px">Document issue workflow</div>
+              <div class="wf-step"><div class="wf-num">1</div><div><div style="font-size:12px;font-weight:500">Author in WIP zone (S0)</div><div style="font-size:11px;color:var(--text2)">Name per ISO 19650, assign S0, iterate P01, P02…</div></div></div>
+              <div class="wf-step"><div class="wf-num">2</div><div><div style="font-size:12px;font-weight:500">Share for coordination (S1)</div><div style="font-size:11px;color:var(--text2)">Clash check in Navisworks. Raise BCF issues in ACC.</div></div></div>
+              <div class="wf-step"><div class="wf-num">3</div><div><div style="font-size:12px;font-weight:500">Publish for information (S2)</div><div style="font-size:11px;color:var(--text2)">Issue to client. Notify all teams via ACC transmittal.</div></div></div>
+              <div class="wf-step"><div class="wf-num">4</div><div><div style="font-size:12px;font-weight:500">Submit for approval (S3)</div><div style="font-size:11px;color:var(--text2)">Formal submission to appointing party.</div></div></div>
+              <div class="wf-step" style="margin-bottom:0"><div class="wf-num" style="background:var(--green)">5</div><div><div style="font-size:12px;font-weight:500">Approve for construction (S4)</div><div style="font-size:11px;color:var(--text2)">Contractual revision (C01). Live on site.</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div id="wt-stage-c" style="display:none"><div class="card"><div class="ct" style="margin-bottom:12px">Stage-by-stage BIM delivery guide</div><div style="display:flex;flex-direction:column;gap:8px"><div class="card-sm"><div class="row"><span class="pill p-gray" style="flex-shrink:0;width:60px;justify-content:center">Stage 0</span><div><div style="font-size:12px;font-weight:500">Strategic definition</div><div style="font-size:11px;color:var(--text2)">Establish EIR, appoint BIM Coordinator, set up ACC project hub</div></div></div></div><div class="card-sm"><div class="row"><span class="pill p-blue" style="flex-shrink:0;width:60px;justify-content:center">Stage 1</span><div><div style="font-size:12px;font-weight:500">Preparation and briefing</div><div style="font-size:11px;color:var(--text2)">Pre-appointment BEP, responsibility matrix, Revit templates</div></div></div></div><div class="card-sm"><div class="row"><span class="pill p-blue" style="flex-shrink:0;width:60px;justify-content:center">Stage 2</span><div><div style="font-size:12px;font-weight:500">Concept design</div><div style="font-size:11px;color:var(--text2)">Initial Revit model, site plan issued S2, coordination in Navisworks</div></div></div></div><div class="card-sm"><div class="row"><span class="pill p-amber" style="flex-shrink:0;width:60px;justify-content:center">Stage 3</span><div><div style="font-size:12px;font-weight:500">Spatial coordination</div><div style="font-size:11px;color:var(--text2)">All disciplines S1, Clash Detective weekly, BCF tracked in ACC</div></div></div></div><div class="card-sm"><div class="row"><span class="pill p-amber" style="flex-shrink:0;width:60px;justify-content:center">Stage 4</span><div><div style="font-size:12px;font-weight:500">Technical design</div><div style="font-size:11px;color:var(--text2)">Detailed models, specs S3 for approval, planning drawings S2</div></div></div></div><div class="card-sm"><div class="row"><span class="pill p-green" style="flex-shrink:0;width:60px;justify-content:center">Stage 5</span><div><div style="font-size:12px;font-weight:500">Construction</div><div style="font-size:11px;color:var(--text2)">S4 drawings on site, contractual revisions, as-built model updated</div></div></div></div><div class="card-sm"><div class="row"><span class="pill p-green" style="flex-shrink:0;width:60px;justify-content:center">Stage 6</span><div><div style="font-size:12px;font-weight:500">Handover</div><div style="font-size:11px;color:var(--text2)">PIM → AIM per ISO 19650-3, COBie export, record set archived</div></div></div></div></div></div></div>
+        <div id="wt-bep-c" style="display:none"><div class="card"><div class="ct" style="margin-bottom:4px">BIM Execution Plan (BEP) template</div><p style="font-size:11px;color:var(--text2);margin-bottom:12px">Pre-populated template aligned to ISO 19650-2 Annex A.</p><div style="display:flex;flex-direction:column;gap:6px"><div class="card-sm"><div class="ct" style="font-size:11px;margin-bottom:3px">Section 1 — Project information</div><div style="font-size:11px;color:var(--text2)">Project title, IDS reference, client name, address, RIBA stage, BIM coordinator</div></div><div class="card-sm"><div class="ct" style="font-size:11px;margin-bottom:3px">Section 2 — Project team &amp; roles</div><div style="font-size:11px;color:var(--text2)">Appointing party, task teams per discipline, information manager, BIM leads</div></div><div class="card-sm"><div class="ct" style="font-size:11px;margin-bottom:3px">Section 3 — Information delivery milestones</div><div style="font-size:11px;color:var(--text2)">Key deliverable dates, suitability targets, model LOD schedule, review gates</div></div><div class="card-sm"><div class="ct" style="font-size:11px;margin-bottom:3px">Section 4 — CDE configuration (ACC)</div><div style="font-size:11px;color:var(--text2)">Folder structure, access permissions, naming reference, state transition rules</div></div><div class="card-sm"><div class="ct" style="font-size:11px;margin-bottom:3px">Section 5 — Software and exchange formats</div><div style="font-size:11px;color:var(--text2)">Revit version, IFC schema, Navisworks NWD, VR delivery via Twinmotion</div></div></div><div style="margin-top:12px"><button class="btn btn-primary">Download BEP template (.docx)</button></div></div></div>
+        <div id="wt-coord-c" style="display:none"><div class="card"><div class="ct" style="margin-bottom:10px">Discipline coordination checklist</div><div class="chk-row"><div class="chk done" id="wc1" onclick="tgl('wc1')"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="white" stroke-width="2"><polyline points="1,4.5 3.5,7 8,2"/></svg></div><div style="font-size:12px;color:var(--text)">Revit model purged and audited before sharing</div></div><div class="chk-row"><div class="chk done" id="wc2" onclick="tgl('wc2')"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="white" stroke-width="2"><polyline points="1,4.5 3.5,7 8,2"/></svg></div><div style="font-size:12px;color:var(--text)">File named correctly per ISO 19650-2 before upload</div></div><div class="chk-row"><div class="chk" id="wc3" onclick="tgl('wc3')"></div><div style="font-size:12px;color:var(--text)">Suitability set to S1 in ACC metadata</div></div><div class="chk-row"><div class="chk" id="wc4" onclick="tgl('wc4')"></div><div style="font-size:12px;color:var(--text)">Navisworks NWC exported and added to federated model</div></div><div class="chk-row"><div class="chk" id="wc5" onclick="tgl('wc5')"></div><div style="font-size:12px;color:var(--text)">Clash Detective run — new clashes logged as BCF issues</div></div><div class="chk-row" style="border-bottom:none"><div class="chk" id="wc6" onclick="tgl('wc6')"></div><div style="font-size:12px;color:var(--text)">All disciplines notified via ACC transmittal</div></div></div></div>
+      </div>
+
+      <!-- COORDINATION -->
+      <div class="screen" id="s-collab">
+        <div class="ph">Coordination</div><div class="psub">Cross-discipline model coordination via Autodesk Construction Cloud and Navisworks Manage.</div>
+        <div class="cde-panel"><div class="row" style="margin-bottom:3px;gap:10px"><div style="flex:1"><div style="font-size:13px;font-weight:600;color:white;margin-bottom:2px">Autodesk Construction Cloud — CDE</div><div style="font-size:11px;color:rgba(255,255,255,0.4)">IDS-2401 project hub · 40 members · 3.2 GB</div></div><a class="btn btn-adsk" href="https://acc.autodesk.com" target="_blank"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.8"><path d="M4 2H2a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1V8"/><polyline points="7,1 11,1 11,5"/><line x1="11" y1="1" x2="5" y2="7"/></svg>Open ACC</a></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0"><div class="cde-stat"><div style="font-size:20px;font-weight:600;color:white;font-family:var(--mono)">20</div><div style="font-size:9px;color:rgba(255,255,255,0.35);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;margin-top:2px">containers</div></div><div class="cde-stat"><div style="font-size:20px;font-weight:600;color:white;font-family:var(--mono)">8</div><div style="font-size:9px;color:rgba(255,255,255,0.35);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;margin-top:2px">S2 published</div></div><div class="cde-stat"><div style="font-size:20px;font-weight:600;color:white;font-family:var(--mono)">3</div><div style="font-size:9px;color:rgba(255,255,255,0.35);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;margin-top:2px">pending review</div></div></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap"><a class="btn btn-cyan" href="https://acc.autodesk.com">Files</a><a class="btn btn-cyan" href="https://acc.autodesk.com">RFIs</a><a class="btn btn-cyan" href="https://acc.autodesk.com">Issues</a><a class="btn btn-cyan" href="https://acc.autodesk.com">Submittals</a></div></div>
+        <div class="card" style="margin-bottom:12px"><div class="row" style="justify-content:space-between;margin-bottom:10px"><div class="ct">Navisworks Manage — Clash Detective</div><a class="btn btn-navis" href="https://www.autodesk.com/products/navisworks" target="_blank">Open Navisworks</a></div><div style="font-size:11px;color:var(--text2);margin-bottom:10px">Federated model: <span class="mono">IDS-2401_IDS_ZZ_ZZ_MO_X_0001.nwd</span></div><div class="g3" style="margin-bottom:0"><div class="card-sm"><div class="m-label">Total clashes</div><div style="font-size:20px;font-weight:600;color:var(--red);font-family:var(--mono)">14</div></div><div class="card-sm"><div class="m-label">New this run</div><div style="font-size:20px;font-weight:600;color:var(--amber);font-family:var(--mono)">3</div></div><div class="card-sm"><div class="m-label">Resolved</div><div style="font-size:20px;font-weight:600;color:var(--green);font-family:var(--mono)">9</div></div></div></div>
+        <div class="card"><div class="ct" style="margin-bottom:10px">BCF issue tracker</div><table><thead><tr><th>BCF ref.</th><th>Issue</th><th>Disciplines</th><th>Container (ISO 19650)</th><th>Assigned</th><th>Status</th></tr></thead><tbody><tr><td class="mono">BCF-001</td><td style="color:var(--text2)">Beam clash — L01 C-D</td><td><span class="pill p-amber" style="margin-right:3px">S</span><span class="pill p-purple">M</span></td><td class="mono" style="font-size:10px">IDS-2401_IDS_ZZ_L01_DR_S_0002</td><td style="color:var(--text2)">D. Murphy</td><td><span class="pill p-red">Open</span></td></tr><tr><td class="mono">BCF-002</td><td style="color:var(--text2)">Ceiling height — B2 L01</td><td><span class="pill p-blue" style="margin-right:3px">A</span><span class="pill p-amber">S</span></td><td class="mono" style="font-size:10px">IDS-2401_IDS_B2_L01_DR_A_0002</td><td style="color:var(--text2)">S. O'Brien</td><td><span class="pill p-amber">Pending</span></td></tr><tr><td class="mono">BCF-003</td><td style="color:var(--text2)">Conduit conflicts — GF</td><td><span class="pill p-teal" style="margin-right:3px">E</span><span class="pill p-amber">S</span></td><td class="mono" style="font-size:10px">IDS-2401_IDS_ZZ_GF_DR_E_0001</td><td style="color:var(--text2)">P. Walsh</td><td><span class="pill p-red">Open</span></td></tr><tr><td class="mono">BCF-004</td><td style="color:var(--text2);text-decoration:line-through;opacity:0.55">Column offset — Grid A3</td><td><span class="pill p-blue" style="margin-right:3px">A</span><span class="pill p-amber">S</span></td><td class="mono" style="font-size:10px">IDS-2401_IDS_ZZ_GF_DR_S_0001</td><td style="color:var(--text2)">M. Collins</td><td><span class="pill p-green">Closed</span></td></tr></tbody></table></div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="screen" id="s-faq">
+        <div class="ph">FAQ &amp; Support</div><div class="psub">Quick answers for common questions — searchable knowledge base for all IDS staff.</div>
+        <div class="g2">
+          <div>
+            <div class="ct" style="margin-bottom:10px">Common questions</div>
+            <div class="faq-item"><div class="faq-q" onclick="faqtog(this)">Where do I save project files?<svg class="faq-arrow" viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg></div><div class="faq-a">All project files must be saved to Autodesk Construction Cloud (ACC) — not the local server. Use the IDS-2401 project hub and the ISO 19650 folder structure. Never save WIP files directly to a Published folder.</div></div>
+            <div class="faq-item"><div class="faq-q" onclick="faqtog(this)">How do I name a Revit model correctly?<svg class="faq-arrow" viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg></div><div class="faq-a">Use the ISO 19650-2 format: <span style="font-family:var(--mono);font-size:11px">IDS-2401_IDS_ZZ_ZZ_MO_A_0001.rvt</span>. The type code for a model is always MO. Use the Upload Document button in the File Register to auto-generate the correct name.</div></div>
+            <div class="faq-item"><div class="faq-q" onclick="faqtog(this)">What is the latest drawing template?<svg class="faq-arrow" viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg></div><div class="faq-a">Download the IDS Title Block Template v3.2 from the Collaboration section. Always check the hub for the current version before starting a new drawing set.</div></div>
+            <div class="faq-item"><div class="faq-q" onclick="faqtog(this)">How do I issue a revised drawing?<svg class="faq-arrow" viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg></div><div class="faq-a">Increment the revision (P01 → P02…) in filename and title block. Upload to ACC WIP zone. Change suitability to S1 for review, then S2 to issue. Use ACC transmittal to notify recipients.</div></div>
+            <div class="faq-item"><div class="faq-q" onclick="faqtog(this)">What is the difference between S1 and S2?<svg class="faq-arrow" viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg></div><div class="faq-a">S1 (Coordination) is for sharing with disciplines for clash checking — NOT for client issue. S2 (Information) is a formal client issue. Always confirm with the project lead before moving from S1 to S2.</div></div>
+            <div class="faq-item"><div class="faq-q" onclick="faqtog(this)">Who do I contact for BIM support?<svg class="faq-arrow" viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg></div><div class="faq-a">Contact the IDS BIM Coordinator (S. O'Brien) or post in the Collaboration section. For urgent ACC access issues, contact IT Support. For training queries, use the Training Portal.</div></div>
+          </div>
+          <div>
+            <div class="ct" style="margin-bottom:10px">BIM support contacts</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+              <div class="contact-card"><div class="av" style="width:30px;height:30px;font-size:11px;background:var(--blue2);border:1px solid var(--cyan)">SO</div><div style="flex:1"><div style="font-size:12px;font-weight:500">S. O'Brien</div><div style="font-size:10px;color:var(--text3)">BIM Coordinator · Architecture lead</div></div><span class="pill p-green">Available</span></div>
+              <div class="contact-card"><div class="av" style="width:30px;height:30px;font-size:11px;background:var(--amber);border:none;color:white">DM</div><div style="flex:1"><div style="font-size:12px;font-weight:500">D. Murphy</div><div style="font-size:10px;color:var(--text3)">BIM Lead · Structural</div></div><span class="pill p-green">Available</span></div>
+              <div class="contact-card"><div class="av" style="width:30px;height:30px;font-size:11px;background:var(--purple);border:none;color:white">PW</div><div style="flex:1"><div style="font-size:12px;font-weight:500">P. Walsh</div><div style="font-size:10px;color:var(--text3)">BIM Lead · M&amp;E</div></div><span class="pill p-amber">In training</span></div>
+            </div>
+            <div class="card-sm"><div class="ct" style="margin-bottom:8px">Submit a question</div>
+              <textarea style="width:100%;border:1px solid var(--border);border-radius:var(--r);padding:8px 10px;font-size:12px;font-family:var(--sans);color:var(--text);background:var(--bg);resize:none;height:70px" placeholder="Type your question here…"></textarea>
+              <div style="margin-top:8px;display:flex;gap:8px"><select style="font-size:11px;padding:4px 8px;border:1px solid var(--border);border-radius:var(--r);color:var(--text2);background:var(--surface);flex:1"><option>BIM general</option><option>File management</option><option>Revit</option><option>ACC</option><option>ISO 19650</option></select><button class="btn btn-primary">Submit</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLABORATION -->
+      <div class="screen" id="s-collab2">
+        <div class="ph">Collaboration</div><div class="psub">Share lessons learned, post questions and request digital support.</div>
+        <div class="g2">
+          <div>
+            <div class="ct" style="margin-bottom:10px">Discussion board</div>
+            <div class="collab-post"><div class="row" style="margin-bottom:7px"><div class="col-av" style="background:var(--accent-light);color:var(--blue2)">SO</div><div><div style="font-size:12px;font-weight:500">S. O'Brien</div><div style="font-size:10px;color:var(--text3)">BIM Coordinator · 2 hours ago</div></div><span class="pill p-blue" style="margin-left:auto">Announcement</span></div><p style="font-size:12px;color:var(--text2)">The ACC CDE is now live for project IDS-2401. All new files must be uploaded here — not the local server. Check SOP-01 in the Workflow Toolkit.</p></div>
+            <div class="collab-post"><div class="row" style="margin-bottom:7px"><div class="col-av" style="background:var(--green-light);color:var(--green)">DM</div><div><div style="font-size:12px;font-weight:500">D. Murphy</div><div style="font-size:10px;color:var(--text3)">Structural · Yesterday</div></div><span class="pill p-amber" style="margin-left:auto">Lesson learned</span></div><p style="font-size:12px;color:var(--text2)">Always export NWC from Revit before uploading to Navisworks. Exporting from the published model rather than a local copy prevents clash false positives.</p></div>
+            <div style="margin-top:10px"><textarea style="width:100%;border:1px solid var(--border);border-radius:var(--r);padding:8px 10px;font-size:12px;font-family:var(--sans);color:var(--text);background:var(--surface);resize:none;height:60px" placeholder="Share an update, lesson learned, or ask a question…"></textarea><div style="margin-top:7px;display:flex;gap:7px"><select style="font-size:11px;padding:4px 8px;border:1px solid var(--border);border-radius:var(--r);color:var(--text2);background:var(--surface)"><option>Lesson learned</option><option>Question</option><option>Announcement</option><option>Tip</option></select><button class="btn btn-primary">Post</button></div></div>
+          </div>
+          <div>
+            <div class="ct" style="margin-bottom:10px">Useful downloads</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)"><div class="ftype ft-sp">SP</div><div style="flex:1;font-size:12px;color:var(--text2)">IDS BIM Standards Manual v1.0</div><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px">Download</button></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)"><div class="ftype ft-dr">DR</div><div style="flex:1;font-size:12px;color:var(--text2)">IDS Title Block Template v3.2 (.rvt)</div><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px">Download</button></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)"><div class="ftype ft-rs">RS</div><div style="flex:1;font-size:12px;color:var(--text2)">BIM Execution Plan (BEP) template (.docx)</div><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px">Download</button></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)"><div class="ftype ft-sc">SC</div><div style="flex:1;font-size:12px;color:var(--text2)">ISO 19650 Naming Cheat Sheet (.pdf)</div><button class="btn btn-ghost" style="font-size:10px;padding:3px 8px">Download</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROADMAP -->
+      <div class="screen" id="s-roadmap">
+        <div class="ph">Digital transformation roadmap</div><div class="psub">IDS journey from traditional CAD to full BIM-enabled delivery — 4 phases, 18 months.</div>
+        <div class="phase-card"><div class="row" style="margin-bottom:7px"><div class="phase-num" style="background:var(--green-light);color:var(--green)">1</div><div class="ct" style="flex:1">Foundations</div><span class="pill p-green">Complete</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Months 1–3</span></div><p style="font-size:12px;color:var(--text2)">BIM awareness training, Revit and Navisworks licensing, BIM Coordinator appointed, ISO 19650 naming adopted, ACC CDE configured, IDS BIM Standards Manual published.</p></div>
+        <div class="phase-card" style="border-color:var(--accent-mid)"><div class="row" style="margin-bottom:7px"><div class="phase-num" style="background:var(--accent-light);color:var(--blue2)">2</div><div class="ct" style="flex:1">Capability building</div><span class="pill p-amber">Active · Week 14</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Months 3–9</span></div><p style="font-size:12px;color:var(--text2);margin-bottom:8px">ISO 19650 Parts 1–3 training, Workflow Toolkit published, BIM Learning Centre live, Navisworks clash detection active, BCF issue tracker running, pilot project underway.</p><div class="bar-wrap"><div class="bar" style="width:55%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">55% complete · On track</div></div>
+        <div class="phase-card"><div class="row" style="margin-bottom:7px"><div class="phase-num" style="background:var(--bg2);color:var(--text3)">3</div><div class="ct" style="flex:1">First BIM project</div><span class="pill p-gray">Upcoming</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Months 9–15</span></div><p style="font-size:12px;color:var(--text2)">First live project to ISO 19650-2. All containers in ACC. Navisworks in production. Client-facing deliverables. Twinmotion + Meta Quest 3 VR presentation.</p></div>
+        <div class="phase-card"><div class="row" style="margin-bottom:7px"><div class="phase-num" style="background:var(--bg2);color:var(--text3)">4</div><div class="ct" style="flex:1">CWMF compliance &amp; scale</div><span class="pill p-gray">Upcoming</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Months 15–18</span></div><p style="font-size:12px;color:var(--text2)">Full Irish Government CWMF compliance. BIM mandatory on all public tenders. ISO 19650-3 handover embedded. Annual BIM audit. Future: AI chatbot, automated file-checking, VR onboarding, competency dashboards.</p></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const pages={dash:'Dashboard',bimlearn:'BIM Learning Centre',training:'Training portal',standards:'BIM standards',files:'File register',workflow:'Workflow toolkit',collab:'Coordination',faq:'FAQ & support',collab2:'Collaboration',roadmap:'Roadmap'};
+function nav(id,el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  if(el)el.classList.add('on');
+  document.getElementById('bc').textContent=pages[id];
+}
+function btab(id,el){document.querySelectorAll('#s-bimlearn .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');['intro','levels','ireland','gloss','quiz'].forEach(k=>{const e=document.getElementById('bl-'+k+'-c');if(e)e.style.display=k===id?'':'none';});}
+function stab(id,el){document.querySelectorAll('#s-standards .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');['iso','naming','suit','chk'].forEach(k=>{const e=document.getElementById('st-'+k);if(e)e.style.display=k===id?'':'none';});}
+function wtab(id,el){document.querySelectorAll('#s-workflow .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');['sop','stage','bep','coord'].forEach(k=>{const e=document.getElementById('wt-'+k+'-c');if(e)e.style.display=k===id?'':'none';});}
+function tgl(id){const el=document.getElementById(id);el.classList.toggle('done');el.innerHTML=el.classList.contains('done')?'<svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="white" stroke-width="2"><polyline points="1,4.5 3.5,7 8,2"/></svg>':'';}
+function faqtog(el){const a=el.nextElementSibling,arr=el.querySelector('.faq-arrow');const isOpen=a.classList.contains('open');el.parentElement.parentElement.querySelectorAll('.faq-a').forEach(x=>x.classList.remove('open'));el.parentElement.parentElement.querySelectorAll('.faq-q').forEach(x=>{x.classList.remove('open');x.querySelector('.faq-arrow').classList.remove('open');});if(!isOpen){a.classList.add('open');el.classList.add('open');arr.classList.add('open');}}
+function qsel(el,q){document.querySelectorAll(`[data-q="${q}"] .ql`).forEach(b=>{b.style.background='';b.style.color='';b.style.borderColor=''});el.style.background='var(--accent-light)';el.style.color='var(--blue2)';el.style.borderColor='var(--accent-mid)';}
+function submitQuiz(){document.getElementById('quiz-result').style.display='block';}
+function openUpload(){document.getElementById('upload-modal').style.display='flex';updatePreview();}
+function closeUpload(){document.getElementById('upload-modal').style.display='none';}
+function triggerFile(){document.getElementById('file-input').click();}
+function fileChosen(inp){if(inp.files&&inp.files[0]){document.getElementById('drop-label').textContent=inp.files[0].name;updatePreview();}}
+let nextNum=18;
+function updatePreview(){
+  const vol=document.getElementById('up-vol').value,lvl=document.getElementById('up-lvl').value,type=document.getElementById('up-type').value,role=document.getElementById('up-role').value,suit=document.getElementById('up-suit').value;
+  const num=String(nextNum).padStart(4,'0');
+  document.getElementById('preview-name').textContent=`IDS-2401_IDS_${vol}_${lvl}_${type}_${role}_${num}`;
+  const sc={S0:'p-gray',S1:'p-blue',S2:'p-teal',S3:'p-purple'};
+  const ps=document.getElementById('preview-suit');ps.textContent=suit;ps.className='pill '+(sc[suit]||'p-gray');
+}
+function confirmUpload(){
+  const vol=document.getElementById('up-vol').value,lvl=document.getElementById('up-lvl').value,type=document.getElementById('up-type').value,role=document.getElementById('up-role').value,suit=document.getElementById('up-suit').value,desc=document.getElementById('up-desc').value||'New document';
+  const num=String(nextNum).padStart(4,'0');
+  FILES.push({ref:`IDS-2401_IDS_${vol}_${lvl}_${type}_${role}_${num}`,desc,type,role,suit,rev:'P01',upd:'Just now'});
+  nextNum++;renderFiles();closeUpload();document.getElementById('up-desc').value='';
+}
+const FILES=[
+  {ref:'IDS-2401_IDS_ZZ_GF_DR_A_0001',desc:'Ground floor GA plan',type:'DR',role:'A',suit:'S2',rev:'P04',upd:'Today'},
+  {ref:'IDS-2401_IDS_ZZ_L01_DR_A_0002',desc:'Level 1 GA plan',type:'DR',role:'A',suit:'S2',rev:'P03',upd:'Today'},
+  {ref:'IDS-2401_IDS_ZZ_RF_DR_A_0003',desc:'Roof plan',type:'DR',role:'A',suit:'S1',rev:'P02',upd:'2d ago'},
+  {ref:'IDS-2401_IDS_ZZ_ZZ_DR_A_0004',desc:'Site plan',type:'DR',role:'A',suit:'S2',rev:'P05',upd:'3d ago'},
+  {ref:'IDS-2401_IDS_ZZ_ZZ_MO_A_0001',desc:'Architectural Revit model',type:'MO',role:'A',suit:'S2',rev:'P06',upd:'Yesterday'},
+  {ref:'IDS-2401_IDS_ZZ_GF_DR_S_0001',desc:'Ground floor structural GA',type:'DR',role:'S',suit:'S1',rev:'P02',upd:'Yesterday'},
+  {ref:'IDS-2401_IDS_ZZ_L01_DR_S_0002',desc:'Level 1 structural GA',type:'DR',role:'S',suit:'S1',rev:'P02',upd:'2d ago'},
+  {ref:'IDS-2401_IDS_ZZ_ZZ_CA_S_0001',desc:'Structural calculations',type:'CA',role:'S',suit:'S0',rev:'P01',upd:'3d ago'},
+  {ref:'IDS-2401_IDS_ZZ_ZZ_MO_S_0001',desc:'Structural Revit model',type:'MO',role:'S',suit:'S1',rev:'P03',upd:'2d ago'},
+  {ref:'IDS-2401_IDS_ZZ_ZZ_SP_S_0001',desc:'Structural specification',type:'SP',role:'S',suit:'S0',rev:'P01',upd:'1w ago'},
+  {ref:'IDS-2401_IDS_ZZ_GF_DR_M_0001',desc:'Ground floor mechanical',type:'DR',role:'M',suit:'S0',rev:'P01',upd:'3d ago'},
+  {ref:'IDS-2401_IDS_ZZ_GF_DR_E_0001',desc:'Ground floor electrical',type:'DR',role:'E',suit:'S0',rev:'P01',upd:'4d ago'},
+  {ref:'IDS-2401_IDS_SS_ZZ_DR_C_0001',desc:'Civil site layout',type:'DR',role:'C',suit:'S1',rev:'P02',upd:'1w ago'},
+  {ref:'IDS-2401_IDS_ZZ_ZZ_SP_X_0001',desc:'Multi-discipline specification',type:'SP',role:'X',suit:'S1',rev:'P02',upd:'5d ago'},
+  {ref:'IDS-2401_IDS_ZZ_ZZ_RS_X_0001',desc:'BIM Execution Plan (BEP)',type:'RS',role:'X',suit:'S2',rev:'P03',upd:'1w ago'},
+  {ref:'IDS-2401_IDS_ZZ_ZZ_SC_X_0001',desc:'Room data sheet schedule',type:'SC',role:'X',suit:'S1',rev:'P01',upd:'1w ago'},
+  {ref:'IDS-2401_IDS_SS_ZZ_DR_C_0002',desc:'Drainage layout',type:'DR',role:'C',suit:'S0',rev:'P01',upd:'1w ago'},
+];
+const sp={S0:'<span class="pill p-gray">S0 — WIP</span>',S1:'<span class="pill p-blue">S1 — Coord.</span>',S2:'<span class="pill p-teal">S2 — Info</span>',S3:'<span class="pill p-purple">S3 — Review</span>'};
+const rp={A:'<span class="pill p-blue">A</span>',S:'<span class="pill p-amber">S</span>',M:'<span class="pill p-purple">M</span>',E:'<span class="pill p-teal">E</span>',C:'<span class="pill p-green">C</span>',X:'<span class="pill p-gray">X</span>'};
+const ti={DR:'ft-dr',MO:'ft-mo',CA:'ft-ca',SP:'ft-sp',RS:'ft-rs',SC:'ft-sc'};
+function renderFiles(){
+  const role=document.getElementById('fr').value,suit=document.getElementById('fs').value;
+  const rows=FILES.filter(f=>(role===''||f.role===role)&&(suit===''||f.suit===suit));
+  document.getElementById('ftbody').innerHTML=rows.map(f=>`<tr><td><div style="display:flex;align-items:center;gap:6px"><div class="ftype ${ti[f.type]||'ft-dr'}">${f.type}</div><span class="mono">${f.ref}</span></div></td><td style="color:var(--text2)">${f.desc}</td><td><span class="pill p-gray" style="font-family:var(--mono)">${f.type}</span></td><td>${rp[f.role]||f.role}</td><td>${sp[f.suit]||f.suit}</td><td class="mono">${f.rev}</td><td style="color:var(--text3);font-size:10px">${f.upd}</td></tr>`).join('');
+}
+document.getElementById('fr').addEventListener('change',renderFiles);
+document.getElementById('fs').addEventListener('change',renderFiles);
+renderFiles();
+</script>
